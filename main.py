@@ -89,44 +89,42 @@ def create_app():
     
     return app
 
+# Criar instância da aplicação para Gunicorn (DEVE estar no nível do módulo)
+app = create_app()
+
 def main():
-    """Função principal para rodar o servidor"""
-    
-    # Criar a aplicação
-    app = create_app()
+    """Função principal para rodar o servidor em desenvolvimento"""
     
     # Configurações para desenvolvimento vs produção
     if os.environ.get('RENDER'):
-        # Produção na Render
-        port = int(os.environ.get('PORT', 10000))
-        host = '0.0.0.0'
-        debug = False
-        print("🚀 Iniciando Lar Doce App API em PRODUÇÃO...")
+        # Produção na Render - Gunicorn vai gerenciar
+        print("🚀 Aplicação criada para produção na Render")
+        return
     else:
         # Desenvolvimento local
         port = int(os.environ.get('PORT', 5000))
         host = '127.0.0.1'
         debug = True
         print("🏠 Iniciando Lar Doce App API em DESENVOLVIMENTO...")
-    
-    print(f"📍 Servidor rodando em: http://{host}:{port}")
-    print(f"🔧 Modo debug: {debug}")
-    print(f"💾 Banco de dados: {app.config['SQLALCHEMY_DATABASE_URI']}")
-    print("\n🚀 Endpoints disponíveis:")
-    print(f"   • Health Check: http://{host}:{port}/api/health")
-    print(f"   • Login:        http://{host}:{port}/api/login")
-    print(f"   • Usuários:     http://{host}:{port}/api/users")
-    print(f"   • Tarefas:      http://{host}:{port}/api/tasks")
-    print(f"   • Ranking:      http://{host}:{port}/api/ranking")
-    print(f"   • Estatísticas: http://{host}:{port}/api/stats")
-    print("\n" + "="*50)
-    
-    # Rodar o servidor
-    app.run(
-        host=host,
-        port=port,
-        debug=debug
-    )
+        
+        print(f"📍 Servidor rodando em: http://{host}:{port}")
+        print(f"🔧 Modo debug: {debug}")
+        print(f"💾 Banco de dados: {app.config['SQLALCHEMY_DATABASE_URI']}")
+        print("\n🚀 Endpoints disponíveis:")
+        print(f"   • Health Check: http://{host}:{port}/api/health")
+        print(f"   • Login:        http://{host}:{port}/api/login")
+        print(f"   • Usuários:     http://{host}:{port}/api/users")
+        print(f"   • Tarefas:      http://{host}:{port}/api/tasks")
+        print(f"   • Ranking:      http://{host}:{port}/api/ranking")
+        print(f"   • Estatísticas: http://{host}:{port}/api/stats")
+        print("\n" + "="*50)
+        
+        # Rodar o servidor
+        app.run(
+            host=host,
+            port=port,
+            debug=debug
+        )
 
 if __name__ == '__main__':
     main()
